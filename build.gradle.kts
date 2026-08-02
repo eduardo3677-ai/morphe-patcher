@@ -9,7 +9,7 @@ plugins {
     jacoco
 }
 
-group = "app.morphe"
+group = "io.github.eduardo3677-ai"
 
 tasks {
     processResources {
@@ -53,11 +53,10 @@ repositories {
         }
     }
     maven {
-        // A repository must be specified for some reason. "registry" is a dummy.
-        url = uri("https://maven.pkg.github.com/MorpheApp/registry")
+        url = uri("https://maven.pkg.github.com/eduardo3677-ai/registry")
         credentials {
-            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
-            password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+            username = System.getenv("GITHUB_ACTOR") ?: ""
+            password = System.getenv("GITHUB_TOKEN") ?: ""
         }
     }
 }
@@ -119,11 +118,17 @@ java {
 publishing {
     repositories {
         maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/MorpheApp/morphe-patcher")
+            name = "MavenCentral"
+            url = uri(
+                if (project.version.toString().endsWith("-SNAPSHOT")) {
+                    "https://central.sonatype.com/repository/maven-snapshots/"
+                } else {
+                    "https://central.sonatype.com/api/v1/publisher/deploy/"
+                }
+            )
             credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
+                username = System.getenv("MAVEN_CENTRAL_USERNAME") ?: ""
+                password = System.getenv("MAVEN_CENTRAL_PASSWORD") ?: ""
             }
         }
     }
@@ -133,11 +138,13 @@ publishing {
             from(components["java"])
 
             version = project.version.toString()
+            groupId = "io.github.eduardo3677-ai"
+            artifactId = "morphe-patcher"
 
             pom {
                 name = "Morphe Patcher"
                 description = "Patcher used by Morphe."
-                url = "https://Morphe.software"
+                url = "https://github.com/eduardo3677-ai/morphe-patcher"
 
                 licenses {
                     license {
@@ -147,15 +154,14 @@ publishing {
                 }
                 developers {
                     developer {
-                        id = "Morphe"
-                        name = "Morphe"
-                        email = "contact@morphe.software"
+                        id = "eduardo3677-ai"
+                        name = "eduardo3677-ai"
                     }
                 }
                 scm {
-                    connection = "scm:git:git://github.com/MorpheApp/morphe-patcher.git"
-                    developerConnection = "scm:git:git@github.com:MorpheApp/morphe-patcher.git"
-                    url = "https://github.com/MorpheApp/morphe-patcher"
+                    connection = "scm:git:git://github.com/eduardo3677-ai/morphe-patcher.git"
+                    developerConnection = "scm:git:git@github.com:eduardo3677-ai/morphe-patcher.git"
+                    url = "https://github.com/eduardo3677-ai/morphe-patcher"
                 }
             }
         }

@@ -42,8 +42,8 @@ jobs:
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # Run tests against the matrix JDK via a Gradle toolchain, discovered from the
-        # JDKs that setup-java installed (both x64 and arm64 runners are covered).
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
         run: >-
           ./gradlew build --no-daemon
           -PtestJavaVersion=${{ matrix.jdk }}
